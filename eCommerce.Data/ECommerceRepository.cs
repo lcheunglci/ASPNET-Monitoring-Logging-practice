@@ -9,11 +9,13 @@ namespace eCommerce.Data
     {
         private readonly LocalContext _context;
         private readonly ILogger<ECommerceRepository> _logger;
+        private readonly ILogger _factoryLogger;
 
-        public ECommerceRepository(LocalContext context, ILogger<ECommerceRepository> logger)
+        public ECommerceRepository(LocalContext context, ILogger<ECommerceRepository> logger, ILoggerFactory loggerFactory)
         {
             _context = context;
             _logger = logger;
+            _factoryLogger = loggerFactory.CreateLogger("DataAccessLayer");
         }
 
         public async Task<List<Product>> GetProductsAsync(string category)
@@ -32,6 +34,10 @@ namespace eCommerce.Data
             _logger.LogDebug("Querying products for {id} finished in {milliseconds} milliseconds",
                 id,
                 timer.ElapsedMilliseconds);
+
+            _factoryLogger.LogInformation("(F) Querying products for {id} finished in {ticks} ticks",
+                id,
+                timer.ElapsedTicks);
 
             return product;
         }
