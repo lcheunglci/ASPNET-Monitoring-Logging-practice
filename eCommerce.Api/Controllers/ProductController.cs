@@ -1,5 +1,5 @@
+using eCommerce.Data.Entities;
 using eCommerce.Domain;
-using eCommerce.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CarvedRock.Api.Controllers;
@@ -23,4 +23,19 @@ public class ProductController : ControllerBase
         _logger.LogInformation("Getting products in API for {category}", category);
         return await _productLogic.GetProductsForCategory(category);
     }
+
+    [HttpGet("{id:int}")]
+    [ProducesResponseType(typeof(Product), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Get(int id)
+    {
+        // var product = _productLogic.GetProductByIdAsync(id);
+        var product = _productLogic.GetProductById(id);
+        if (product != null)
+        {
+            return Ok(product);
+        }
+        return NotFound();
+    }
+
 }
