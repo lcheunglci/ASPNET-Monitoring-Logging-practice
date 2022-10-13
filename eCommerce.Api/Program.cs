@@ -1,13 +1,14 @@
 using eCommerce.Data;
 using eCommerce.Domain;
-using System.Diagnostics;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-var tracePath = Path.Join(path, $"Log_eCommerce_{DateTime.Now.ToString("yyyyMMdd-HHmm")}.txt");
-Trace.Listeners.Add(new TextWriterTraceListener(System.IO.File.CreateText(tracePath)));
-Trace.AutoFlush = true;
+builder.Logging.AddFilter("eCommerce", LogLevel.Debug);
+
+//var path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+//var tracePath = Path.Join(path, $"Log_eCommerce_{DateTime.Now.ToString("yyyyMMdd-HHmm")}.txt");
+//Trace.Listeners.Add(new TextWriterTraceListener(System.IO.File.CreateText(tracePath)));
+//Trace.AutoFlush = true;
 
 // Add services to the container.
 
