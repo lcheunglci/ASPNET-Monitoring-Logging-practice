@@ -28,34 +28,42 @@ namespace eCommerce.Data
 
             Products.Add(new Product
             {
-                Name = "Trailblazer",
-                Category = "boots",
-                Price = 69.99,
-                Description = "Great support in this high-top to take you to great heights and trails."
+                Name = "Bear",
+                Category = "sticker",
+                Price = 6.99,
+                Description = "Cheerful brown bear sticker to add to your collection."
             });
             Products.Add(new Product
             {
-                Name = "Coastliner",
-                Category = "boots",
-                Price = 49.99,
+                Name = "Dog",
+                Category = "sticker",
+                Price = 4.99,
                 Description =
-                    "Easy in and out with this lightweight but rugged shoe with great ventilation to get your around shores, beaches, and boats."
+                    "Friendly husky dog sticker to add to your collection of dog stickers."
             });
             Products.Add(new Product
             {
-                Name = "Woodsman",
-                Category = "boots",
-                Price = 64.99,
+                Name = "Penguin",
+                Category = "sticker",
+                Price = 6.99,
                 Description =
-                    "All the insulation and support you need when wandering the rugged trails of the woods and backcountry."
+                    "Playful penguin sticker to add to your collection of article birds."
             });
             Products.Add(new Product
             {
-                Name = "Billy",
-                Category = "boots",
-                Price = 79.99,
+                Name = "Sloth",
+                Category = "sticker",
+                Price = 7.99,
                 Description =
-                    "Get up and down rocky terrain like a billy-goat with these awesome high-top boots with outstanding support."
+                    "The sleepy slow sloth sticker to add to your collection."
+            });
+            Products.Add(new Product
+            {
+                Name = "Whale",
+                Category = "sticker",
+                Price = 99.99,
+                Description =
+                    "To show off that you are whale lover and a whale spender, this sticker is for you."
             });
 
             SaveChanges();
