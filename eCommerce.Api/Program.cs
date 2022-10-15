@@ -1,9 +1,21 @@
 using eCommerce.Data;
 using eCommerce.Domain;
+using Hellang.Middleware.ProblemDetails;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddProblemDetails(opts =>
+{
+    opts.IncludeExceptionDetails = (context, ex) => false;
+    opts.OnBeforeWriteDetails = (context, details) =>
+    {
+        if (details.Status == 500)
+        {
+            details.Detail = "An error occurred in our API. Use the trace id when contacting us.";
+        }
+    };
+});
 
-builder.Logging.AddFilter("eCommerce", LogLevel.Debug);
+//builder.Logging.AddFilter("eCommerce", LogLevel.Debug);
 
 //var path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
 //var tracePath = Path.Join(path, $"Log_eCommerce_{DateTime.Now.ToString("yyyyMMdd-HHmm")}.txt");
@@ -23,6 +35,7 @@ builder.Services.AddScoped<IECommerceRepository, ECommerceRepository>();
 
 
 var app = builder.Build();
+app.UseProblemDetails();
 
 using (var scope = app.Services.CreateScope())
 {
