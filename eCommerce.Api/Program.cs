@@ -1,18 +1,22 @@
+using eCommerce.Api;
 using eCommerce.Data;
 using eCommerce.Domain;
 using Hellang.Middleware.ProblemDetails;
+using Microsoft.Data.Sqlite;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddProblemDetails(opts =>
+builder.Services.AddProblemDetails(options =>
 {
-    opts.IncludeExceptionDetails = (context, ex) => false;
-    opts.OnBeforeWriteDetails = (context, details) =>
+    options.IncludeExceptionDetails = (context, ex) => false;
+    options.OnBeforeWriteDetails = (context, details) =>
     {
         if (details.Status == 500)
         {
             details.Detail = "An error occurred in our API. Use the trace id when contacting us.";
         }
     };
+    options.Rethrow<SqliteException>();
+    options.MapToStatusCode<Exception>(StatusCodes.Status500InternalServerError);
 });
 
 //builder.Logging.AddFilter("eCommerce", LogLevel.Debug);
@@ -36,6 +40,7 @@ builder.Services.AddScoped<IECommerceRepository, ECommerceRepository>();
 
 var app = builder.Build();
 app.UseProblemDetails();
+app.UseMiddleware<CriticalExceptionMiddleware>();
 
 using (var scope = app.Services.CreateScope())
 {
