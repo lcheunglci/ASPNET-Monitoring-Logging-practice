@@ -3,6 +3,10 @@ using eCommerce.Data;
 using eCommerce.Domain;
 using Hellang.Middleware.ProblemDetails;
 using Microsoft.Data.Sqlite;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using Swashbuckle.AspNetCore.SwaggerGen;
+using System.IdentityModel.Tokens.Jwt;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddProblemDetails(options =>
@@ -19,6 +23,18 @@ builder.Services.AddProblemDetails(options =>
     options.MapToStatusCode<Exception>(StatusCodes.Status500InternalServerError);
 });
 
+JwtSecurityTokenHandler.DefaultMapInboundClaims = false;
+builder.Services.AddAuthentication("Bearer")
+    .AddJwtBearer("Bearer", options =>
+    {
+        options.Authority = "https://demo.duendesoftware.com";
+        options.Audience = "api";
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            NameClaimType = "email"
+        };
+    });
+
 //builder.Logging.AddFilter("eCommerce", LogLevel.Debug);
 
 //var path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
@@ -31,6 +47,7 @@ builder.Services.AddProblemDetails(options =>
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, SwaggerOptions>();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IProductLogic, ProductLogic>();
@@ -54,15 +71,21 @@ using (var scope = app.Services.CreateScope())
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(options =>
+    {
+        options.OAuthClientId("interactive.public.short");
+        options.OAuthAppName("eCommerce API");
+        options.OAuthUsePkce();
+    });
 }
 
 app.MapFallback(() => Results.Redirect("/swagger"));
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllers();
+app.MapControllers().RequireAuthorization();
 
 app.Run();
