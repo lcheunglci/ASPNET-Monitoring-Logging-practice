@@ -8,6 +8,16 @@ builder.Services.AddHttpLogging(logging =>
     logging.RequestBodyLogLimit = 4096;
     logging.ResponseBodyLogLimit = 4096;
 });
+var path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+builder.Services.AddW3CLogging(options =>
+{
+    options.LoggingFields = W3CLoggingFields.All;
+    options.FileSizeLimit = 5 * 1024 * 1024;
+    options.RetainedFileCountLimit = 2;
+    options.FileName = "eCommerce-w3c-ui";
+    options.LogDirectory = Path.Combine(path, "logs");
+    options.FlushInterval = TimeSpan.FromSeconds(2);
+});
 
 // Add services to the container.
 builder.Services.AddRazorPages();
