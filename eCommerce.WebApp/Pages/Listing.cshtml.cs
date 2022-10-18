@@ -6,7 +6,7 @@ using System.Net.Http.Headers;
 
 namespace eCommerce.WebApp.Pages
 {
-    public class ListingModel : PageModel
+    public partial class ListingModel : PageModel
     {
         private readonly HttpClient _apiClient;
         private readonly ILogger<ListingModel> _logger;
@@ -22,6 +22,9 @@ namespace eCommerce.WebApp.Pages
 
         public List<Product> Products { get; set; }
         public string CategoryName { get; set; } = "";
+
+        [LoggerMessage(0, LogLevel.Warning, "API failure: {fullPath} Response: {statusCode}, Trace: {traceId}")]
+        partial void LogApiFailure(string fullPath, int statusCode, string traceId);
 
         public async Task OnGetAsync()
         {
@@ -50,13 +53,13 @@ namespace eCommerce.WebApp.Pages
                     new ProblemDetails();
                 var traceId = details.Extensions["traceId"]?.ToString();
 
-                var userName = User.Identity?.IsAuthenticated ?? false ? User.Identity.Name : "";
+                LogApiFailure(fullPath, (int)response.StatusCode, traceId ?? "");
 
-                _logger.LogWarning("API Failure: {fullPath} Response: {response}, Trace: {trace}, User: {user}",
-                    fullPath,
-                    (int)response.StatusCode,
-                    traceId,
-                    userName);
+                //_logger.LogWarning("API Failure: {fullPath} Response: {response}, Trace: {trace}, User: {user}",
+                //    fullPath,
+                //    (int)response.StatusCode,
+                //    traceId,
+                //    userName);
 
                 throw new Exception("API call failed!");
             }

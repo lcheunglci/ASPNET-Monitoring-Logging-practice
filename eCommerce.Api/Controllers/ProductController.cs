@@ -7,10 +7,14 @@ namespace CarvedRock.Api.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class ProductController : ControllerBase
+public partial class ProductController : ControllerBase
 {
     private readonly ILogger<ProductController> _logger;
     private readonly IProductLogic _productLogic;
+
+    [LoggerMessage(eCommerceEvents.GettingProducts, LogLevel.Information,
+        "Source Generated - Getting products in API.")]
+    partial void LogGettingProducts();
 
     public ProductController(ILogger<ProductController> logger, IProductLogic productLogic)
     {
@@ -24,8 +28,9 @@ public class ProductController : ControllerBase
 
         using (_logger.BeginScope("ScopeCat {ScopeCat}", category))
         {
-            _logger.LogInformation(eCommerceEvents.GettingProducts,
-                "Getting products in API for {category}", category);
+            LogGettingProducts();
+            //_logger.LogInformation(eCommerceEvents.GettingProducts,
+            //    "Getting products in API for {category}", category);
             return await _productLogic.GetProductsForCategoryAsync(category);
         }
         // return _productLogic.GetProductsForCategory(category);
