@@ -66,7 +66,6 @@ using (var scope = app.Services.CreateScope())
     context.MigrateAndCreateData();
 }
 
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -78,14 +77,11 @@ if (app.Environment.IsDevelopment())
         options.OAuthUsePkce();
     });
 }
-
 app.MapFallback(() => Results.Redirect("/swagger"));
-
 app.UseHttpsRedirection();
-
 app.UseAuthentication();
+app.UseMiddleware<UserScopeMiddleware>();
 app.UseAuthorization();
-
 app.MapControllers().RequireAuthorization();
 
 app.Run();

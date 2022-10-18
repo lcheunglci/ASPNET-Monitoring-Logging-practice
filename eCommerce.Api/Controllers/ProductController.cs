@@ -21,12 +21,11 @@ public class ProductController : ControllerBase
     [HttpGet]
     public async Task<IEnumerable<Product>> Get(string category = "all")
     {
-        var userName = User.Identity?.IsAuthenticated ?? false ? User.Identity.Name : "";
-        using (_logger.BeginScope("ScopeUser: {ScopeUser}, ScopeCat {ScopeCat}",
-            userName, category))
+
+        using (_logger.BeginScope("ScopeCat {ScopeCat}", category))
         {
             _logger.LogInformation(eCommerceEvents.GettingProducts,
-                "Getting products in API for {category} and {user}", category, userName);
+                "Getting products in API for {category}", category);
             return await _productLogic.GetProductsForCategoryAsync(category);
         }
         // return _productLogic.GetProductsForCategory(category);
