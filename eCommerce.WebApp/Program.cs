@@ -1,12 +1,21 @@
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.IdentityModel.Tokens;
+using Serilog;
+using Serilog.Exceptions;
 using System.IdentityModel.Tokens.Jwt;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Logging.ClearProviders();
-builder.Logging.AddJsonConsole();
+// builder.Logging.AddJsonConsole();
 // builder.Logging.AddDebug();
-builder.Services.AddApplicationInsightsTelemetry();
+// builder.Services.AddApplicationInsightsTelemetry();
+builder.Host.UseSerilog((ContextBoundObject, loggerConfig) =>
+{
+    loggerConfig
+    .WriteTo.Console()
+    .Enrich.WithExceptionDetails()
+    .WriteTo.Seq("http://localhost:5341");
+});
 
 
 JwtSecurityTokenHandler.DefaultMapInboundClaims = false;

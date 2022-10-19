@@ -5,14 +5,24 @@ using Hellang.Middleware.ProblemDetails;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Serilog;
+using Serilog.Exceptions;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.IdentityModel.Tokens.Jwt;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Logging.ClearProviders();
-builder.Logging.AddJsonConsole();
+// builder.Logging.AddJsonConsole();
 // builder.Logging.AddDebug();
-builder.Services.AddApplicationInsightsTelemetry();
+// builder.Services.AddApplicationInsightsTelemetry();
+
+builder.Host.UseSerilog((ContextBoundObject, loggerConfig) =>
+{
+    loggerConfig
+    .WriteTo.Console()
+    .Enrich.WithExceptionDetails()
+    .WriteTo.Seq("http://localhost:5341");
+});
 
 builder.Services.AddProblemDetails(options =>
 {
