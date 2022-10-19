@@ -9,6 +9,10 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 using System.IdentityModel.Tokens.Jwt;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Logging.ClearProviders();
+builder.Logging.AddJsonConsole();
+builder.Logging.AddDebug();
+
 builder.Services.AddProblemDetails(options =>
 {
     options.IncludeExceptionDetails = (context, ex) => false;
