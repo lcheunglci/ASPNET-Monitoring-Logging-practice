@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.HttpLogging;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using Serilog.Exceptions;
@@ -49,7 +50,9 @@ builder.Services.AddAuthentication(options =>
 });
 builder.Services.AddHttpContextAccessor();
 
-builder.Services.AddHealthChecks();
+builder.Services.AddHealthChecks()
+    .AddIdentityServer(new Uri("https://demo.duendesoftware.com"),
+    failureStatus: HealthStatus.Degraded);
 
 builder.Services.AddHttpLogging(logging =>
 {
