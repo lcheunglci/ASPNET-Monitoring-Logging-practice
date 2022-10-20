@@ -75,6 +75,9 @@ builder.Services.AddScoped<IProductLogic, ProductLogic>();
 builder.Services.AddDbContext<LocalContext>();
 builder.Services.AddScoped<IECommerceRepository, ECommerceRepository>();
 
+builder.Services.AddHealthChecks()
+    .AddDbContextCheck<LocalContext>();
+
 
 var app = builder.Build();
 app.UseProblemDetails();
@@ -104,5 +107,5 @@ app.UseAuthentication();
 app.UseMiddleware<UserScopeMiddleware>();
 app.UseAuthorization();
 app.MapControllers().RequireAuthorization();
-
+app.MapHealthChecks("health").AllowAnonymous();
 app.Run();
