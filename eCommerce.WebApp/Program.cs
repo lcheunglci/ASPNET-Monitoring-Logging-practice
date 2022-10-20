@@ -49,6 +49,8 @@ builder.Services.AddAuthentication(options =>
 });
 builder.Services.AddHttpContextAccessor();
 
+builder.Services.AddHealthChecks();
+
 builder.Services.AddHttpLogging(logging =>
 {
     logging.LoggingFields = HttpLoggingFields.All;
@@ -89,5 +91,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapRazorPages().RequireAuthorization();
+app.MapHealthChecks("health").AllowAnonymous();
 
 app.Run();
