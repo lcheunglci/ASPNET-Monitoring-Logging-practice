@@ -6,6 +6,7 @@ using System.IdentityModel.Tokens.Jwt;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Logging.ClearProviders();
+builder.Logging.AddSimpleConsole();
 // builder.Logging.AddJsonConsole();
 // builder.Logging.AddDebug();
 // builder.Services.AddApplicationInsightsTelemetry();
@@ -16,6 +17,9 @@ builder.Host.UseSerilog((ContextBoundObject, loggerConfig) =>
     .Enrich.WithExceptionDetails()
     .WriteTo.Seq("http://localhost:5341");
 });
+
+//NLog.LogManager.Setup().LoadConfigurationFromFile();
+//builder.Host.UseNLog();
 
 
 JwtSecurityTokenHandler.DefaultMapInboundClaims = false;
