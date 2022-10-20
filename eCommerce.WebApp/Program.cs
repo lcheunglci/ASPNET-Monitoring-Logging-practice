@@ -83,10 +83,13 @@ app.UseHttpLogging();
 //{
 app.UseExceptionHandler("/Error");
 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-app.UseHsts();
+// temp disabled for using localhost without https for docker seq
+//app.UseHsts();
 //}
-
-app.UseHttpsRedirection();
+// temp disabled for the localhost without https for docker seq
+//app.UseHttpsRedirection();
+// note: Seq.Input.HealthCheck is the nuget package used on Seq for this to work
+// also change localhost:5341 to host.docker.internal:5341 in the target URLs under Apps instance in Seq
 app.UseStaticFiles();
 
 app.UseRouting();

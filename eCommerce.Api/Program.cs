@@ -102,7 +102,10 @@ if (app.Environment.IsDevelopment())
     });
 }
 app.MapFallback(() => Results.Redirect("/swagger"));
-app.UseHttpsRedirection();
+// temp disabled for using docker seq on localhost for http
+// app.UseHttpsRedirection();
+// note: Seq.Input.HealthCheck is the nuget package used on Seq for this to work
+// also change localhost:5341 to host.docker.internal:5341 in the target URLs under Apps instance in Seq
 app.UseAuthentication();
 app.UseMiddleware<UserScopeMiddleware>();
 app.UseAuthorization();
