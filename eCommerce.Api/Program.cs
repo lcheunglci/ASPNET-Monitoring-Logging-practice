@@ -14,14 +14,15 @@ using System.IdentityModel.Tokens.Jwt;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Logging.ClearProviders();
-builder.Logging.AddSimpleConsole();
+//builder.Logging.AddSimpleConsole();
 // builder.Logging.AddJsonConsole();
 // builder.Logging.AddDebug();
 // builder.Services.AddApplicationInsightsTelemetry();
 
-builder.Host.UseSerilog((ContextBoundObject, loggerConfig) =>
+builder.Host.UseSerilog((context, loggerConfig) =>
 {
     loggerConfig
+    .ReadFrom.Configuration(context.Configuration)
     .WriteTo.Console()
     .Enrich.WithExceptionDetails()
     .WriteTo.Seq("http://localhost:5341");
