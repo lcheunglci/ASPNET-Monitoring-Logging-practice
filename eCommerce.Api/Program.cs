@@ -44,7 +44,7 @@ builder.Services.AddOpenTelemetryTracing(b =>
 
 // note: http://localhost:4317 is for the jaeger container
 // using the following command 
-// docker run --name jaejer -p 13133:13133 -p 16686:16686 -p 4317:55680 -d --restart=unless-stopped jaegertracing/opentelemetry-all-in-one
+// docker run --name jaeger -p 13133:13133 -p 16686:16686 -p 4317:55680 -d --restart=unless-stopped jaegertracing/opentelemetry-all-in-one
 
 
 
