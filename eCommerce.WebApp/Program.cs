@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.IdentityModel.Tokens;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 using Serilog;
 using Serilog.Enrichers.Span;
 using Serilog.Exceptions;
@@ -22,6 +24,19 @@ builder.Host.UseSerilog((context, loggerConfig) =>
     .Enrich.With<ActivityEnricher>()
     .WriteTo.Seq("http://localhost:5341");
 });
+
+builder.Services.AddOpenTelemetryTracing(b =>
+{
+    b.SetResourceBuilder(
+        ResourceBuilder.CreateDefault().AddService(builder.Environment.ApplicationName))
+    .AddAspNetCoreInstrumentation()
+    .AddHttpClientInstrumentation()
+    .AddOtlpExporter(opts => { opts.Endpoint = new Uri("http://localhost:4317"); });
+});
+
+// note: http://localhost:4317 is for the jaeger container
+// using the following command 
+// docker run --name jaejer -p 13133:13133 -p 16686:16686 -p 4317:55680 -d --restart=unless-stopped jaegertracing/opentelemetry-all-in-one
 
 //NLog.LogManager.Setup().LoadConfigurationFromFile();
 //builder.Host.UseNLog();

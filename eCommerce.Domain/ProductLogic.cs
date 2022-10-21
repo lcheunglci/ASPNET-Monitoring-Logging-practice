@@ -1,6 +1,7 @@
 using eCommerce.Data;
 using eCommerce.Data.Entities;
 using Microsoft.Extensions.Logging;
+using System.Diagnostics;
 
 namespace eCommerce.Domain;
 
@@ -34,6 +35,12 @@ public class ProductLogic : IProductLogic
     public async Task<IEnumerable<Product>> GetProductsForCategoryAsync(string category)
     {
         _logger.LogInformation("Getting products in logic for {category}", category);
-        return await _repo.GetProductsAsync(category);
+
+        Activity.Current?.AddEvent(new ActivityEvent("Getting products from repository"));
+        var result  = await _repo.GetProductsAsync(category);
+        Activity.Current?.AddEvent(new ActivityEvent("Retrieved products from repository"));
+
+
+        return result;
     }
 }

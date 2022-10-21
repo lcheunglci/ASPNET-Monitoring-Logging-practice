@@ -5,6 +5,8 @@ using Hellang.Middleware.ProblemDetails;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 //using NLog;
 //using NLog.Web;
 using Serilog;
@@ -30,6 +32,21 @@ builder.Host.UseSerilog((context, loggerConfig) =>
     .Enrich.With<ActivityEnricher>()
     .WriteTo.Seq("http://localhost:5341");
 });
+
+builder.Services.AddOpenTelemetryTracing(b =>
+{
+    b.SetResourceBuilder(
+        ResourceBuilder.CreateDefault().AddService(builder.Environment.ApplicationName))
+    .AddAspNetCoreInstrumentation()
+    .AddEntityFrameworkCoreInstrumentation()
+    .AddOtlpExporter(opts => { opts.Endpoint = new Uri("http://localhost:4317"); });
+});
+
+// note: http://localhost:4317 is for the jaeger container
+// using the following command 
+// docker run --name jaejer -p 13133:13133 -p 16686:16686 -p 4317:55680 -d --restart=unless-stopped jaegertracing/opentelemetry-all-in-one
+
+
 
 //NLog.LogManager.Setup().LoadConfigurationFromFile();
 //builder.Host.UseNLog();
