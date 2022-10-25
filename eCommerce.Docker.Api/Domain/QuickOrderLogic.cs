@@ -14,7 +14,7 @@ namespace eCommerce.Docker.Api.Domain
 
         public Guid PlaceQuickOrder(QuickOrder order, int customerId)
         {
-            //_logger.LogInformation("Placing order and sending update for inventory...");
+            _logger.LogInformation("Placing order and sending update for inventory...");
             // persist order to database or wherever
 
             // post "orderplaced" event to rabbitmq

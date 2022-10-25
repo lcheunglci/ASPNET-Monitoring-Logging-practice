@@ -18,7 +18,7 @@ namespace eCommerce.Docker.Api.Controllers
         [HttpPost]
         public Guid SubmitQuickOrder(QuickOrder order)
         {
-            //_logger.LogInformation($"Submitting order for {orderInfo.Quantity} of {orderInfo.ProductId}.");
+            _logger.LogInformation($"Submitting order for {order.Quantity} of {order.ProductId}.");
             return _quickOrderLogic.PlaceQuickOrder(order, 1234); // ideally, get customer id from authentication system/User claim
         }
 
