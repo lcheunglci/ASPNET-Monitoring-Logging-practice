@@ -1,8 +1,23 @@
 using eCommerce.Docker.Api.Domain;
 using eCommerce.Docker.Api.Interfaces;
 using eCommerce.Docker.Api.Middleware;
+using Serilog;
+using Serilog.Events;
 
 var builder = WebApplication.CreateBuilder(args);
+
+var name = typeof(Program).Assembly.GetName().Name;
+
+builder.Host.UseSerilog((context, loggerConfig) =>
+{
+    loggerConfig
+    .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+    .ReadFrom.Configuration(context.Configuration)
+    .WriteTo.Console()
+    .Enrich.WithMachineName()
+    .Enrich.WithProperty("Assembly", name)
+    .Enrich.FromLogContext();
+});
 
 // Add services to the container.
 builder.Services.AddControllers();
