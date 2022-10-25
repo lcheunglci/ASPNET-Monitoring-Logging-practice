@@ -1,3 +1,4 @@
+using eCommerce.Docker.Api;
 using eCommerce.Docker.Api.Domain;
 using eCommerce.Docker.Api.Interfaces;
 using eCommerce.Docker.Api.Middleware;
@@ -13,10 +14,14 @@ builder.Host.UseSerilog((context, loggerConfig) =>
     loggerConfig
     .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
     .ReadFrom.Configuration(context.Configuration)
-    .WriteTo.Console()
     .Enrich.WithMachineName()
     .Enrich.WithProperty("Assembly", name)
-    .Enrich.FromLogContext();
+    .Enrich.FromLogContext()
+    .WriteTo.Seq(serverUrl: "http://host.docker.internal:5341")
+    .WriteTo.Console();
+    // available sinks: https://github.com/serilog/serilog/wiki/Provided-Sinks
+    // Seq: https://datalust.co/seq
+    // Seq with Docker: https://docs.datalust.co/docs/getting-started-with-docker
 });
 
 // Add services to the container.
@@ -38,6 +43,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCustomRequestLogging();
 
 app.UseAuthorization();
 
