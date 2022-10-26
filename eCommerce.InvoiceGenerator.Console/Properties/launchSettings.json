@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "eCommerce.InvoiceGenerator.Console": {
+      "commandName": "Project"
+    },
+    "Docker (1)": {
+      "commandName": "Docker"
+    }
+  }
+}
