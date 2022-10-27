@@ -30,9 +30,12 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var connectionString = "hello"; // ConnectionString:Db
-var simpleProperty = "hey"; // SimpleProperty
-var nestedProp = "here we go";  // Inventory->NestedProperty
+//var connectionString = "hello"; // ConnectionString:Db
+var connectionString = builder.Configuration.GetConnectionString("Db");
+//var simpleProperty = "hey"; // SimpleProperty
+var simpleProperty = builder.Configuration.GetValue<string>("SimpleProperty");
+//var nestedProp = "here we go";  // Inventory->NestedProperty
+var nestedProp = builder.Configuration.GetValue<string>("Inventory:NestedProperty");
 
 Log.ForContext("ConnectionString", connectionString)
     .ForContext("SimpleProperty", simpleProperty)
