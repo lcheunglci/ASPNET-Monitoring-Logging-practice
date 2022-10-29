@@ -22,7 +22,13 @@
       "commandName": "Docker",
       "launchBrowser": true,
       "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/swagger",
-      "publishAllPorts": true
+      "publishAllPorts": true,
+        "environmentVariables": {
+            /* note this will overwrite the env from the docker file */
+            /* "SimpleProperty": "hi-from-launchsettings", */
+            /* note: it replaces the double underscore __ with colon : */
+            "Inventory__NestedProperty": "this-does-not-seem-possible"
+        }
     }
   },
   "$schema": "https://json.schemastore.org/launchsettings.json",
