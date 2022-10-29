@@ -37,10 +37,10 @@ var simpleProperty = builder.Configuration.GetValue<string>("SimpleProperty");
 //var nestedProp = "here we go";  // Inventory->NestedProperty
 var nestedProp = builder.Configuration.GetValue<string>("Inventory:NestedProperty");
 
-Log.ForContext("ConnectionString", connectionString)
-    .ForContext("SimpleProperty", simpleProperty)
-    .ForContext("Inventory:NestedProperty", nestedProp)
-    .ForContext("Loaded configuration!", connectionString);
+//Log.ForContext("ConnectionString", connectionString)
+//    .ForContext("SimpleProperty", simpleProperty)
+//    .ForContext("Inventory:NestedProperty", nestedProp)
+//    .ForContext("Loaded configuration!", connectionString);
 
 builder.Services.AddScoped<IProductLogic, ProductLogic>();
 builder.Services.AddScoped<IQuickOrderLogic, QuickOrderLogic>();
@@ -52,6 +52,10 @@ app.UseMiddleware<CustomExceptionHandlingMiddleware>();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    var dbgView = (builder.Configuration as IConfigurationRoot).GetDebugView();
+    Log.ForContext("ConfigurationDebug", dbgView)
+        .Information("Configuration dump");
+
     app.UseSwagger();
     app.UseSwaggerUI();
 }
